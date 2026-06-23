@@ -7,7 +7,6 @@ import {
 } from 'lucide-react'
 import { EnergyGauge } from '@/components/ui/EnergyGauge'
 import { signOut } from '@/lib/actions'
-import { currentUser } from '@/lib/data'
 
 const NAV_LINKS = [
   { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
@@ -27,13 +26,12 @@ interface SidebarProps {
 
 export function Sidebar({ profile }: SidebarProps) {
   const pathname = usePathname()
-  const mock = currentUser
 
-  const name = profile?.name ?? mock.name
-  const rank = profile?.rank ?? mock.rank
-  const energy = profile?.energy ?? mock.energy.current
-  const maxEnergy = profile?.max_energy ?? mock.energy.max
-  const avatar = profile?.avatar_url ?? mock.avatar
+  const name = profile?.name ?? 'Seeker'
+  const rank = profile?.rank ?? 'Seeker'
+  const energy = profile?.energy ?? 0
+  const maxEnergy = profile?.max_energy ?? 100
+  const avatar = profile?.avatar_url ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`
 
   return (
     <>

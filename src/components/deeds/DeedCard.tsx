@@ -7,9 +7,10 @@ import { getBranchColor, getBranchLabel, getDifficultyColor } from '@/lib/utils'
 interface DeedCardProps {
   deed: Deed
   onComplete?: (id: string) => void
+  disabled?: boolean
 }
 
-export function DeedCard({ deed, onComplete }: DeedCardProps) {
+export function DeedCard({ deed, onComplete, disabled }: DeedCardProps) {
   const branchColor = getBranchColor(deed.branch)
 
   return (
@@ -84,7 +85,8 @@ export function DeedCard({ deed, onComplete }: DeedCardProps) {
           {/* Complete button */}
           <button
             onClick={() => onComplete?.(deed.id)}
-            className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200"
+            disabled={disabled || deed.completed || !onComplete}
+            className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50"
             style={{
               background: deed.completed ? `${branchColor}20` : 'transparent',
               border: `2px solid ${deed.completed ? branchColor : 'rgba(255,255,255,0.15)'}`,

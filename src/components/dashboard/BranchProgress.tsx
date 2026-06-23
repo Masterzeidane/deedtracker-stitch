@@ -1,13 +1,15 @@
 'use client'
 import { motion } from 'framer-motion'
-import type { Branch } from '@/types'
-import { currentUser } from '@/lib/data'
+import type { Branch, BranchData } from '@/types'
 import { getBranchLabel } from '@/lib/utils'
 
 const BRANCH_ORDER: Branch[] = ['worship', 'knowledge', 'discipline', 'character', 'charity']
 
-export function BranchProgress() {
-  const { branches } = currentUser
+interface BranchProgressProps {
+  branches: Record<Branch, BranchData>
+}
+
+export function BranchProgress({ branches }: BranchProgressProps) {
 
   return (
     <div

@@ -7,9 +7,10 @@ import { getBranchColor, getBranchLabel, countdown, getRarityColor } from '@/lib
 interface ChallengeCardProps {
   challenge: Challenge
   onJoin?: (id: string) => void
+  disabled?: boolean
 }
 
-export function ChallengeCard({ challenge, onJoin }: ChallengeCardProps) {
+export function ChallengeCard({ challenge, onJoin, disabled }: ChallengeCardProps) {
   const branchColor = getBranchColor(challenge.branch)
   const percent = Math.min((challenge.current / challenge.goal) * 100, 100)
   const rarityColor = getRarityColor(challenge.rarity)
@@ -108,7 +109,8 @@ export function ChallengeCard({ challenge, onJoin }: ChallengeCardProps) {
             </div>
             <button
               onClick={() => onJoin?.(challenge.id)}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
+              disabled={disabled || challenge.joined || !onJoin}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 disabled:opacity-50"
               style={
                 challenge.joined
                   ? { color: '#86948a', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }

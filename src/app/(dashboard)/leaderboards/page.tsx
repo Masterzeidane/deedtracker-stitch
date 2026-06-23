@@ -1,9 +1,9 @@
-'use client'
 import { Navbar } from '@/components/layout/Navbar'
 import { LeaderboardTable } from '@/components/leaderboard/LeaderboardTable'
-import { leaderboard, currentUser } from '@/lib/data'
+import { getLeaderboard } from '@/lib/queries'
 
-export default function LeaderboardsPage() {
+export default async function LeaderboardsPage() {
+  const leaderboard = await getLeaderboard()
   const me = leaderboard.find(e => e.isCurrentUser)
 
   return (
@@ -30,7 +30,7 @@ export default function LeaderboardsPage() {
             </div>
           </div>
           <div className="ml-auto text-xs text-[#86948a]" style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
-            {leaderboard.length - me.rank} ahead of you
+            {me.rank - 1} ahead of you
           </div>
         </div>
       )}
@@ -45,7 +45,11 @@ export default function LeaderboardsPage() {
         >
           Global Rankings
         </h3>
-        <LeaderboardTable entries={leaderboard} />
+        {leaderboard.length > 0 ? (
+          <LeaderboardTable entries={leaderboard} />
+        ) : (
+          <div className="text-center py-12 text-[#86948a] text-sm">No rankings yet.</div>
+        )}
       </div>
     </div>
   )

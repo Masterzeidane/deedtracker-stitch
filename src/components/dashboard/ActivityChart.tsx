@@ -1,6 +1,6 @@
 'use client'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { weeklyActivity } from '@/lib/data'
+import type { ActivityDay } from '@/types'
 
 const BRANCH_COLORS = {
   worship: '#4edea3',
@@ -10,7 +10,12 @@ const BRANCH_COLORS = {
   charity: '#ffb3af',
 }
 
-export function ActivityChart() {
+interface ActivityChartProps {
+  data: ActivityDay[]
+}
+
+export function ActivityChart({ data }: ActivityChartProps) {
+  const weeklyActivity = data
   return (
     <div
       className="rounded-xl p-5"
