@@ -1,5 +1,5 @@
 import { Sidebar } from '@/components/layout/Sidebar'
-import { createClient } from '@/lib/supabase/server'
+import { ProfileHeaderProvider } from '@/components/layout/ProfileContext'
 import { getProfile, getBranchProgress } from '@/lib/queries'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -13,14 +13,20 @@ export default async function DashboardLayout({ children }: { children: React.Re
     // Supabase not configured — Sidebar falls back to mock data
   }
 
+  const header = profile
+    ? { name: profile.name, xp: profile.xp, coins: profile.coins, avatar: profile.avatar_url ?? null }
+    : null
+
   return (
-    <div className="min-h-screen bg-[#0b1326]">
-      <Sidebar profile={profile} branches={branches} />
-      <div className="md:pl-[260px] min-h-screen flex flex-col">
-        <main className="flex-1 p-4 md:p-6 pt-20 md:pt-6">
-          {children}
-        </main>
+    <ProfileHeaderProvider value={header}>
+      <div className="min-h-screen bg-[#0b1326]">
+        <Sidebar profile={profile} branches={branches} />
+        <div className="md:pl-[260px] min-h-screen flex flex-col">
+          <main className="flex-1 p-4 md:p-6 pt-20 md:pt-6">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </ProfileHeaderProvider>
   )
 }

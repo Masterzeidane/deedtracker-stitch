@@ -1,26 +1,20 @@
 'use client'
 import { Search, Bell, Star, Coins, ChevronDown } from 'lucide-react'
 import { ProgressionPill } from '@/components/ui/ProgressionPill'
+import { useProfileHeader } from '@/components/layout/ProfileContext'
 
 interface NavbarProps {
   title?: string
 }
 
-// Fallback user
-const FALLBACK_USER = {
-  name: 'Seeker',
-  xp: 4200,
-  coins: 380,
-  avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=DeedTracker',
-}
-
 export function Navbar({ title }: NavbarProps) {
-  let user = FALLBACK_USER
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const data = require('@/lib/data')
-    if (data?.currentUser) user = data.currentUser
-  } catch {}
+  const profile = useProfileHeader()
+  const user = {
+    name: profile.name,
+    xp: profile.xp,
+    coins: profile.coins,
+    avatar: profile.avatar ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(profile.name)}`,
+  }
 
   return (
     <header
@@ -67,7 +61,7 @@ export function Navbar({ title }: NavbarProps) {
         {/* XP pill */}
         <ProgressionPill
           icon={<Star size={13} />}
-          value={user.xp ?? 4200}
+          value={user.xp}
           label="XP"
           color="#4edea3"
         />
@@ -77,7 +71,7 @@ export function Navbar({ title }: NavbarProps) {
           icon={
             <span className="font-bold text-xs leading-none">₵</span>
           }
-          value={user.coins ?? 380}
+          value={user.coins}
           label="Coins"
           color="#ffb95f"
         />
