@@ -43,6 +43,7 @@ export interface User {
   achievements: string[]
   bio: string
   location: string
+  preferences?: Record<string, unknown>
 }
 
 export interface Deed {

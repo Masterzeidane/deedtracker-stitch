@@ -49,7 +49,9 @@ export async function resetPassword(formData: FormData) {
   const email = formData.get('email') as string
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/update-password`,
+    // Route through the callback so the recovery code is exchanged and the
+    // session is set before the user lands on the update-password form.
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/auth/update-password`,
   })
 
   if (error) return { error: error.message }
@@ -132,5 +134,50 @@ export async function updateProfile(formData: FormData) {
 
   revalidatePath('/profile')
   revalidatePath('/settings')
+  return { success: true }
+}
+
+export async function updatePreferences(prefs: Record<string, unknown>) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any)
+    .from('profiles')
+    .update({ preferences: prefs })
+    .eq('user_id', user.id)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/settings')
+  return { success: true }
+}
+
+// ============================================================
+// COMMUNITY ACTIONS
+// ============================================================
+
+export async function toggleLike(feedEventId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sb = supabase as any
+  const { data: existing } = await sb
+    .from('post_likes')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('feed_event_id', feedEventId)
+    .maybeSingle()
+
+  if (existing) {
+    await sb.from('post_likes').delete().eq('id', existing.id)
+  } else {
+    await sb.from('post_likes').insert({ user_id: user.id, feed_event_id: feedEventId })
+  }
+
+  revalidatePath('/community')
   return { success: true }
 }

@@ -122,6 +122,7 @@ export async function getCurrentUser(): Promise<User | null> {
     achievements: (unlocks ?? []).map((u: any) => u.achievement_id as string),
     bio: profile.bio ?? '',
     location: profile.location ?? '',
+    preferences: profile.preferences ?? {},
   }
 }
 
@@ -265,12 +266,24 @@ export async function getLeaderboard(limit = 20): Promise<LeaderboardEntry[]> {
 // ============================================================
 export async function getFeed(limit = 20): Promise<CommunityPost[]> {
   const supabase = (await createClient()) as any
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   const { data } = await supabase
     .from('feed_events')
-    .select(`*, profiles!inner(name, avatar_url, rank)`)
+    .select(`*, profiles!inner(name, avatar_url, rank), post_likes(count)`)
     .order('created_at', { ascending: false })
     .limit(limit)
+
+  let likedSet = new Set<string>()
+  if (user) {
+    const { data: myLikes } = await supabase
+      .from('post_likes')
+      .select('feed_event_id')
+      .eq('user_id', user.id)
+    likedSet = new Set((myLikes ?? []).map((l: any) => l.feed_event_id as string))
+  }
 
   return (data ?? []).map(
     (f: any): CommunityPost => ({
@@ -283,8 +296,8 @@ export async function getFeed(limit = 20): Promise<CommunityPost[]> {
       branch: (f.branch ?? 'worship') as Branch,
       xpEarned: f.xp_earned ?? 0,
       timestamp: f.created_at,
-      likes: 0,
-      liked: false,
+      likes: f.post_likes?.[0]?.count ?? 0,
+      liked: likedSet.has(f.id),
     })
   )
 }

@@ -2,7 +2,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Navbar } from '@/components/layout/Navbar'
-import { updateProfile } from '@/lib/actions'
+import { updateProfile, updatePreferences } from '@/lib/actions'
 import type { User } from '@/types'
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void }) {
@@ -55,12 +55,47 @@ interface SettingsViewProps {
 }
 
 export function SettingsView({ user }: SettingsViewProps) {
-  const [notifs, setNotifs] = useState({ dailyReminder: true, streak: true, challenges: true, community: false, weeklyReport: true })
-  const [privacy, setPrivacy] = useState({ publicProfile: true, showStreak: true, showBranches: false })
+  const prefs = (user.preferences ?? {}) as {
+    notifications?: Partial<Record<string, boolean>>
+    privacy?: Partial<Record<string, boolean>>
+  }
+  const [notifs, setNotifs] = useState({
+    dailyReminder: prefs.notifications?.dailyReminder ?? true,
+    streak: prefs.notifications?.streak ?? true,
+    challenges: prefs.notifications?.challenges ?? true,
+    community: prefs.notifications?.community ?? false,
+    weeklyReport: prefs.notifications?.weeklyReport ?? true,
+  })
+  const [privacy, setPrivacy] = useState({
+    publicProfile: prefs.privacy?.publicProfile ?? true,
+    showStreak: prefs.privacy?.showStreak ?? true,
+    showBranches: prefs.privacy?.showBranches ?? false,
+  })
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
+  const [, startPrefs] = useTransition()
   const router = useRouter()
+
+  function persist(nextNotifs: typeof notifs, nextPrivacy: typeof privacy) {
+    startPrefs(() => {
+      updatePreferences({ notifications: nextNotifs, privacy: nextPrivacy })
+    })
+  }
+  function toggleNotif(key: keyof typeof notifs) {
+    setNotifs((n) => {
+      const next = { ...n, [key]: !n[key] }
+      persist(next, privacy)
+      return next
+    })
+  }
+  function togglePrivacy(key: keyof typeof privacy) {
+    setPrivacy((p) => {
+      const next = { ...p, [key]: !p[key] }
+      persist(notifs, next)
+      return next
+    })
+  }
 
   function handleSave(formData: FormData) {
     setMessage('')
@@ -137,35 +172,35 @@ export function SettingsView({ user }: SettingsViewProps) {
           </Section>
         </form>
 
-        {/* Notifications (local UI only — not yet persisted) */}
+        {/* Notifications (persisted to profile.preferences) */}
         <Section title="Notifications">
           <Row label="Daily Reminder" description="Remind me to complete today's deeds">
-            <Toggle checked={notifs.dailyReminder} onChange={() => setNotifs(n => ({ ...n, dailyReminder: !n.dailyReminder }))} />
+            <Toggle checked={notifs.dailyReminder} onChange={() => toggleNotif('dailyReminder')} />
           </Row>
           <Row label="Streak Alerts" description="Alert me when my streak is at risk">
-            <Toggle checked={notifs.streak} onChange={() => setNotifs(n => ({ ...n, streak: !n.streak }))} />
+            <Toggle checked={notifs.streak} onChange={() => toggleNotif('streak')} />
           </Row>
           <Row label="Challenge Updates" description="Notify me about challenge progress">
-            <Toggle checked={notifs.challenges} onChange={() => setNotifs(n => ({ ...n, challenges: !n.challenges }))} />
+            <Toggle checked={notifs.challenges} onChange={() => toggleNotif('challenges')} />
           </Row>
           <Row label="Community Activity" description="Show me what others are completing">
-            <Toggle checked={notifs.community} onChange={() => setNotifs(n => ({ ...n, community: !n.community }))} />
+            <Toggle checked={notifs.community} onChange={() => toggleNotif('community')} />
           </Row>
           <Row label="Weekly Report" description="Summary of my week every Sunday">
-            <Toggle checked={notifs.weeklyReport} onChange={() => setNotifs(n => ({ ...n, weeklyReport: !n.weeklyReport }))} />
+            <Toggle checked={notifs.weeklyReport} onChange={() => toggleNotif('weeklyReport')} />
           </Row>
         </Section>
 
-        {/* Privacy (local UI only — not yet persisted) */}
+        {/* Privacy (persisted to profile.preferences) */}
         <Section title="Privacy">
           <Row label="Public Profile" description="Allow others to view your profile">
-            <Toggle checked={privacy.publicProfile} onChange={() => setPrivacy(p => ({ ...p, publicProfile: !p.publicProfile }))} />
+            <Toggle checked={privacy.publicProfile} onChange={() => togglePrivacy('publicProfile')} />
           </Row>
           <Row label="Show Streak" description="Display your streak on the leaderboard">
-            <Toggle checked={privacy.showStreak} onChange={() => setPrivacy(p => ({ ...p, showStreak: !p.showStreak }))} />
+            <Toggle checked={privacy.showStreak} onChange={() => togglePrivacy('showStreak')} />
           </Row>
           <Row label="Show Branch Progress" description="Share which branches you're growing">
-            <Toggle checked={privacy.showBranches} onChange={() => setPrivacy(p => ({ ...p, showBranches: !p.showBranches }))} />
+            <Toggle checked={privacy.showBranches} onChange={() => togglePrivacy('showBranches')} />
           </Row>
         </Section>
       </div>

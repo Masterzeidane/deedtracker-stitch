@@ -1,7 +1,10 @@
 'use client'
+import { useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { Heart } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Navbar } from '@/components/layout/Navbar'
+import { toggleLike } from '@/lib/actions'
 import { getBranchColor, getBranchLabel, timeAgo } from '@/lib/utils'
 import type { CommunityPost, LeaderboardEntry } from '@/types'
 
@@ -11,6 +14,16 @@ interface CommunityViewProps {
 }
 
 export function CommunityView({ posts, featured }: CommunityViewProps) {
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+
+  function handleLike(id: string) {
+    startTransition(async () => {
+      await toggleLike(id)
+      router.refresh()
+    })
+  }
+
   return (
     <div className="space-y-6">
       <Navbar title="Community" />
@@ -67,10 +80,16 @@ export function CommunityView({ posts, featured }: CommunityViewProps) {
                         +{post.xpEarned} XP
                       </span>
                       <span className="text-[10px] text-[#86948a]">{timeAgo(post.timestamp)}</span>
-                      <span className="flex items-center gap-1 text-[10px] text-[#86948a] ml-auto">
-                        <Heart size={10} />
+                      <button
+                        onClick={() => handleLike(post.id)}
+                        disabled={isPending}
+                        className="flex items-center gap-1 text-[10px] ml-auto transition-colors disabled:opacity-50"
+                        style={{ color: post.liked ? '#ffb3af' : '#86948a' }}
+                        aria-label={post.liked ? 'Unlike' : 'Like'}
+                      >
+                        <Heart size={10} fill={post.liked ? '#ffb3af' : 'none'} />
                         {post.likes}
-                      </span>
+                      </button>
                     </div>
                   </div>
                 </div>
