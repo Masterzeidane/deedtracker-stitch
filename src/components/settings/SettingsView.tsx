@@ -57,7 +57,6 @@ interface SettingsViewProps {
 export function SettingsView({ user }: SettingsViewProps) {
   const prefs = (user.preferences ?? {}) as {
     notifications?: Partial<Record<string, boolean>>
-    privacy?: Partial<Record<string, boolean>>
   }
   const [notifs, setNotifs] = useState({
     dailyReminder: prefs.notifications?.dailyReminder ?? true,
@@ -66,33 +65,18 @@ export function SettingsView({ user }: SettingsViewProps) {
     community: prefs.notifications?.community ?? false,
     weeklyReport: prefs.notifications?.weeklyReport ?? true,
   })
-  const [privacy, setPrivacy] = useState({
-    publicProfile: prefs.privacy?.publicProfile ?? true,
-    showStreak: prefs.privacy?.showStreak ?? true,
-    showBranches: prefs.privacy?.showBranches ?? false,
-  })
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
   const [, startPrefs] = useTransition()
   const router = useRouter()
 
-  function persist(nextNotifs: typeof notifs, nextPrivacy: typeof privacy) {
-    startPrefs(() => {
-      updatePreferences({ notifications: nextNotifs, privacy: nextPrivacy })
-    })
-  }
   function toggleNotif(key: keyof typeof notifs) {
     setNotifs((n) => {
       const next = { ...n, [key]: !n[key] }
-      persist(next, privacy)
-      return next
-    })
-  }
-  function togglePrivacy(key: keyof typeof privacy) {
-    setPrivacy((p) => {
-      const next = { ...p, [key]: !p[key] }
-      persist(notifs, next)
+      startPrefs(() => {
+        updatePreferences({ notifications: next })
+      })
       return next
     })
   }
@@ -188,19 +172,6 @@ export function SettingsView({ user }: SettingsViewProps) {
           </Row>
           <Row label="Weekly Report" description="Summary of my week every Sunday">
             <Toggle checked={notifs.weeklyReport} onChange={() => toggleNotif('weeklyReport')} />
-          </Row>
-        </Section>
-
-        {/* Privacy (persisted to profile.preferences) */}
-        <Section title="Privacy">
-          <Row label="Public Profile" description="Allow others to view your profile">
-            <Toggle checked={privacy.publicProfile} onChange={() => togglePrivacy('publicProfile')} />
-          </Row>
-          <Row label="Show Streak" description="Display your streak on the leaderboard">
-            <Toggle checked={privacy.showStreak} onChange={() => togglePrivacy('showStreak')} />
-          </Row>
-          <Row label="Show Branch Progress" description="Share which branches you're growing">
-            <Toggle checked={privacy.showBranches} onChange={() => togglePrivacy('showBranches')} />
           </Row>
         </Section>
       </div>
