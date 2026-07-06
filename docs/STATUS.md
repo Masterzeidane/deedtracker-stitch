@@ -1,6 +1,6 @@
 # DeedTracker — Definitive Status Report (Source of Truth)
 
-**As of:** production commit `837865e` on `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state, not earlier ones.
+**As of:** production commit `7d37662` on `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state, not earlier ones. (Phase 1 #1 privacy toggles removed in `7d37662`; Phase 1 #2 email delivery verified via Supabase Auth config — no code change.)
 
 **Legend:** Complete = works end-to-end on live data · Partial = works but a key sub-behavior is absent · Broken = present but errors · Fake = UI present, no real backing/effect · Missing = not present.
 
@@ -15,7 +15,7 @@
 | Sign in / Sign out | Complete | `signIn`/`signOut` actions + session cookies | Can access account | Critical |
 | Password reset → update-password | Complete | routed via `/auth/callback` → `/auth/update-password` | Can recover account | High |
 | Route protection / session persistence | Complete | middleware verified (307 redirects, no 500s) | Protected areas gated | Critical |
-| Transactional email delivery | Partial | code correct, but production SMTP/redirect-allowlist not confirmed on Supabase Auth | Confirm/reset emails may not arrive | Critical |
+| Transactional email delivery | Complete | code correct; Supabase Auth verified — Confirm email ON, custom SMTP enabled, Site URL + redirect URLs allow-listed, `NEXT_PUBLIC_SITE_URL` set | Confirm/reset emails deliver | Critical |
 
 ### Core loop / deeds
 | Feature | Status | Why | User impact | Priority |
@@ -56,7 +56,7 @@
 | Feature | Status | Why | User impact | Priority |
 |---|---|---|---|---|
 | Notification toggles | Fake | persist to `preferences` but no notification system exists | Promises alerts that never come | High |
-| Privacy toggles | Fake | persist but no effect; contradicted by world-readable RLS | Misrepresents privacy — trust risk | Critical |
+| Privacy toggles | Removed | deleted in commit `7d37662` (were Fake — persisted but never enforced); no longer in the UI | Resolved | — |
 | Delete account | Missing | button removed; no flow | No data-deletion path | Medium |
 | Navbar search box | Fake | non-functional input on every screen | Looks broken | High |
 | Navbar notification badge "3" | Fake | hardcoded number | Looks fake | Medium |
@@ -74,8 +74,8 @@
 
 ### PHASE 1 — Must Fix Before Launch
 *Only what makes the product look broken, misleading, or untrustworthy. Clearing these = launch-ready.*
-1. **Privacy toggles (Fake)** — remove or make real; they falsely imply privacy the RLS doesn't enforce. *Trust/legal risk.*
-2. **Transactional email delivery (Partial)** — configure Supabase Auth SMTP + redirect allow-list so confirm/reset emails actually send. *Otherwise auth is effectively broken.*
+1. ✅ **DONE** — **Privacy toggles (Fake)** removed in `7d37662`; no longer imply privacy the RLS doesn't enforce.
+2. ✅ **DONE** — **Transactional email delivery** verified via Supabase Auth (Confirm email ON, custom SMTP, Site URL + redirect URLs allow-listed, `NEXT_PUBLIC_SITE_URL` set). No code change required.
 3. **Navbar search box (Fake)** — remove; non-functional control on every screen.
 4. **Energy meter (Fake)** — remove/hide; it displays a dead mechanic.
 5. **Challenge progress (Partial)** — hide the progress bar/Completed tab (or wire it); joining currently implies tracking that never happens.
