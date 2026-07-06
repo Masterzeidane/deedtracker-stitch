@@ -1,5 +1,5 @@
 'use client'
-import { Search, Bell, Star, Coins, ChevronDown } from 'lucide-react'
+import { Bell, Star, Coins, ChevronDown } from 'lucide-react'
 import { ProgressionPill } from '@/components/ui/ProgressionPill'
 import { useProfileHeader } from '@/components/layout/ProfileContext'
 
@@ -36,25 +36,6 @@ export function Navbar({ title }: NavbarProps) {
           {title}
         </h1>
       )}
-
-      {/* Search bar */}
-      <div className="flex-1 max-w-md">
-        <div
-          className="flex items-center gap-2 px-3 py-2 rounded-lg"
-          style={{
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.08)',
-          }}
-        >
-          <Search size={15} className="text-[#bbcabf] flex-shrink-0" />
-          <input
-            type="text"
-            placeholder="Search deeds, quests..."
-            className="flex-1 bg-transparent outline-none text-sm text-[#dae2fd] placeholder:text-[#bbcabf]/60"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
-          />
-        </div>
-      </div>
 
       {/* Right side items */}
       <div className="flex items-center gap-2 ml-auto">
