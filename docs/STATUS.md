@@ -1,6 +1,6 @@
 # DeedTracker — Definitive Status Report (Source of Truth)
 
-**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state. Phase 1 #1–#4 addressed: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed.
+**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state. Phase 1 #1–#4 addressed: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only).
 
 **Legend:** Complete = works end-to-end on live data · Partial = works but a key sub-behavior is absent · Broken = present but errors · Fake = UI present, no real backing/effect · Missing = not present.
 
@@ -49,7 +49,7 @@
 | Featured seekers | Complete | leaderboard slice | Informational | Low |
 | Accountability (circles/partners) | Missing | not built | No social obligation | Medium |
 | Challenges — join + persist | Complete | `join_challenge` | Can join | Medium |
-| Challenges — progress tracking | Partial | `current_progress` never auto-advances; "Completed" unreachable | Join implies tracking that never happens | High |
+| Challenges — progress tracking | Deferred | progress bar + "Completed" tab removed for launch; challenges are join-only (Available/Joined). Auto-advance is a Phase 2 item; DB/RPCs unchanged | Resolved (no longer misleading) | — |
 | Landing / Pricing | Complete | static marketing | Fine | Low |
 
 ### Settings & chrome
@@ -78,7 +78,7 @@
 2. ✅ **DONE** — **Transactional email delivery** verified via Supabase Auth (Confirm email ON, custom SMTP, Site URL + redirect URLs allow-listed, `NEXT_PUBLIC_SITE_URL` set). No code change required.
 3. ✅ **DONE** — **Navbar search box (Fake)** removed in `7dc2393` (non-functional input; no replacement).
 4. ✅ **DONE** — **Energy meter (Fake)** UI removed (dashboard card, quests section, sidebar gauge, per-deed cost, EnergyGauge component). DB columns + `restore_energy()` intentionally left intact (Phase 2 decision).
-5. **Challenge progress (Partial)** — hide the progress bar/Completed tab (or wire it); joining currently implies tracking that never happens.
+5. ✅ **DONE** — **Challenge progress (Partial)** UI removed for launch: progress bar + "Completed" tab gone; challenges are join-only (Available/Joined). Auto-advance deferred to Phase 2; DB/RPCs unchanged.
 6. **Notification toggles (Fake)** — hide until notifications exist; they promise alerts that never arrive.
 7. **Navbar notification badge "3" (Fake)** — remove the hardcoded count.
 8. **Delete-account (Missing)** — provide a data-deletion path (trust/compliance).

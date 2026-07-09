@@ -12,7 +12,6 @@ interface ChallengeCardProps {
 
 export function ChallengeCard({ challenge, onJoin, disabled }: ChallengeCardProps) {
   const branchColor = getBranchColor(challenge.branch)
-  const percent = Math.min((challenge.current / challenge.goal) * 100, 100)
   const rarityColor = getRarityColor(challenge.rarity)
 
   return (
@@ -65,25 +64,6 @@ export function ChallengeCard({ challenge, onJoin, disabled }: ChallengeCardProp
             <p className="text-xs text-[#86948a] line-clamp-2">{challenge.description}</p>
           </div>
         </div>
-
-        {/* Progress bar */}
-        {challenge.joined && (
-          <div className="mb-3">
-            <div className="flex justify-between text-xs mb-1.5" style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
-              <span className="text-[#bbcabf]">Progress</span>
-              <span style={{ color: branchColor }}>{challenge.current}/{challenge.goal}</span>
-            </div>
-            <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-              <motion.div
-                className="h-full rounded-full"
-                style={{ background: `linear-gradient(90deg, ${branchColor}80, ${branchColor})` }}
-                initial={{ width: 0 }}
-                animate={{ width: `${percent}%` }}
-                transition={{ duration: 1, ease: 'easeOut' }}
-              />
-            </div>
-          </div>
-        )}
 
         {/* Footer */}
         <div className="flex items-center justify-between">

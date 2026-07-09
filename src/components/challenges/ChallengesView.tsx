@@ -11,7 +11,7 @@ interface ChallengesViewProps {
 }
 
 export function ChallengesView({ challenges }: ChallengesViewProps) {
-  const [tab, setTab] = useState<'active' | 'available' | 'completed'>('active')
+  const [tab, setTab] = useState<'joined' | 'available'>('joined')
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
@@ -25,11 +25,10 @@ export function ChallengesView({ challenges }: ChallengesViewProps) {
     })
   }
 
-  const active = challenges.filter(c => c.joined && c.current < c.goal)
+  const joined = challenges.filter(c => c.joined)
   const available = challenges.filter(c => !c.joined)
-  const completed = challenges.filter(c => c.joined && c.current >= c.goal)
 
-  const lists: Record<string, Challenge[]> = { active, available, completed }
+  const lists: Record<string, Challenge[]> = { joined, available }
 
   return (
     <div className="space-y-6">
@@ -46,7 +45,7 @@ export function ChallengesView({ challenges }: ChallengesViewProps) {
         className="flex gap-1 p-1 rounded-xl w-fit"
         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
       >
-        {(['active', 'available', 'completed'] as const).map(t => (
+        {(['joined', 'available'] as const).map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
