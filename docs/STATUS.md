@@ -1,6 +1,6 @@
 # DeedTracker — Definitive Status Report (Source of Truth)
 
-**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state. Phase 1 #1–#4 addressed: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only), Notifications section removed from Settings.
+**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state. Phase 1 #1–#4 addressed: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only), Notifications section removed from Settings, Navbar notification badge removed.
 
 **Legend:** Complete = works end-to-end on live data · Partial = works but a key sub-behavior is absent · Broken = present but errors · Fake = UI present, no real backing/effect · Missing = not present.
 
@@ -59,7 +59,7 @@
 | Privacy toggles | Removed | deleted in commit `7d37662` (were Fake — persisted but never enforced); no longer in the UI | Resolved | — |
 | Delete account | Missing | button removed; no flow | No data-deletion path | Medium |
 | Navbar search box | Fake | non-functional input on every screen | Looks broken | High |
-| Navbar notification badge "3" | Fake | hardcoded number | Looks fake | Medium |
+| Navbar notification badge "3" | Removed | hardcoded count deleted (was Fake — no notification system, no unread source); bell icon kept as neutral chrome | Resolved | — |
 
 ### Security & data integrity
 | Feature | Status | Why | User impact | Priority |
@@ -80,7 +80,7 @@
 4. ✅ **DONE** — **Energy meter (Fake)** UI removed (dashboard card, quests section, sidebar gauge, per-deed cost, EnergyGauge component). DB columns + `restore_energy()` intentionally left intact (Phase 2 decision).
 5. ✅ **DONE** — **Challenge progress (Partial)** UI removed for launch: progress bar + "Completed" tab gone; challenges are join-only (Available/Joined). Auto-advance deferred to Phase 2; DB/RPCs unchanged.
 6. ✅ **DONE** — **Notification toggles (Fake)** removed from Settings (persisted to `preferences` but no notification system exists). `updatePreferences()`, the `preferences` column, and `User.preferences` type/mapping intentionally left intact (Phase 2 decision).
-7. **Navbar notification badge "3" (Fake)** — remove the hardcoded count.
+7. ✅ **DONE** — **Navbar notification badge "3" (Fake)** removed (hardcoded count, no notification system / unread source). Bell icon kept as neutral chrome.
 8. **Delete-account (Missing)** — provide a data-deletion path (trust/compliance).
 9. **Leaked-password protection (Missing)** — enable the Supabase Auth setting.
 

@@ -59,21 +59,11 @@ export function Navbar({ title }: NavbarProps) {
 
         {/* Notification bell */}
         <button
-          className="relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-200 hover:bg-white/8"
+          className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-200 hover:bg-white/8"
           style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
           aria-label="Notifications"
         >
           <Bell size={16} className="text-[#dae2fd]" />
-          <span
-            className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center"
-            style={{
-              background: '#ef4444',
-              color: '#fff',
-              fontFamily: "'JetBrains Mono', monospace",
-            }}
-          >
-            3
-          </span>
         </button>
 
         {/* User avatar */}
