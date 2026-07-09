@@ -1,6 +1,6 @@
 # DeedTracker — Definitive Status Report (Source of Truth)
 
-**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state. Phase 1 #1–#4 addressed: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only), Notifications section removed from Settings, Navbar notification badge removed.
+**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state. Phase 1 #1–#4 addressed: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only), Notifications section removed from Settings, Navbar notification badge removed. Leaked-password protection reclassified Blocked (Free plan) and moved out of Phase 1 (Pro-only feature; see Known Limitations).
 
 **Legend:** Complete = works end-to-end on live data · Partial = works but a key sub-behavior is absent · Broken = present but errors · Fake = UI present, no real backing/effect · Missing = not present.
 
@@ -66,7 +66,7 @@
 |---|---|---|---|---|
 | XP/coin/streak/leaderboard tamper protection | Complete | column grants + RLS, live-verified (42501 blocked) | Cheating blocked | Critical |
 | RPC impersonation guard (SEC-61) | Complete | `Forbidden` guard, verified | No cross-user writes | Critical |
-| Leaked-password protection | Missing | Supabase Auth toggle disabled | Weak passwords allowed | Medium |
+| Leaked-password protection | Blocked (Free plan) | Supabase HaveIBeenPwned check is a Pro-plan feature ($25/mo); project is on Free and will not upgrade for launch | Weak/breached passwords accepted at signup/reset | Medium |
 
 ---
 
@@ -82,7 +82,8 @@
 6. ✅ **DONE** — **Notification toggles (Fake)** removed from Settings (persisted to `preferences` but no notification system exists). `updatePreferences()`, the `preferences` column, and `User.preferences` type/mapping intentionally left intact (Phase 2 decision).
 7. ✅ **DONE** — **Navbar notification badge "3" (Fake)** removed (hardcoded count, no notification system / unread source). Bell icon kept as neutral chrome.
 8. **Delete-account (Missing)** — provide a data-deletion path (trust/compliance).
-9. **Leaked-password protection (Missing)** — enable the Supabase Auth setting.
+
+> **Moved out of Phase 1 — Leaked-password protection (Blocked, Free plan).** Supabase's HaveIBeenPwned check is a Pro-plan feature ($25/mo). The project is on Free and is not upgrading for launch, so this cannot be completed under current constraints and no longer gates launch. The security gap is real but invisible to users; it is tracked under **Known Limitations** below with a clear unblock path (upgrade to Pro, then flip one Auth toggle — no code change).
 
 ### PHASE 2 — Retention Improvements
 *Only items that materially increase daily/weekly return.*
@@ -100,6 +101,12 @@
 3. **Prayer-time anchors** — an Islamic-native daily rhythm no generic tracker has.
 4. **Reflection (muhasabah) + intention (niyyah) rituals** — depth beyond checkboxes.
 5. **Rework the leaderboard toward private/anonymous** — values-aligned (riyā') differentiation.
+
+---
+
+## Known Limitations (accepted, not launch blockers)
+
+- **Leaked-password protection — Blocked (Free plan).** Supabase Auth's breached-password check (HaveIBeenPwned k-anonymity lookup at signup/reset/update) requires the **Pro plan ($25/mo)**; the project is on Free and is not upgrading for launch. Result: weak or previously-breached passwords are accepted. This is a backend gap invisible to users and cannot be fixed without upgrading. **Unblock path:** upgrade to Pro → Authentication → Password settings → enable "Leaked password protection" (config-only, no code change). Verified disabled in the security advisor on `dhwxxcvolwdzkzggjzup` (`auth_leaked_password_protection`, WARN).
 
 ---
 
