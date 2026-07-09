@@ -2,24 +2,8 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Navbar } from '@/components/layout/Navbar'
-import { updateProfile, updatePreferences } from '@/lib/actions'
+import { updateProfile } from '@/lib/actions'
 import type { User } from '@/types'
-
-function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onChange}
-      className="relative w-10 h-5 rounded-full transition-all duration-200 flex items-center"
-      style={{ background: checked ? '#4edea3' : 'rgba(255,255,255,0.1)' }}
-    >
-      <span
-        className="absolute w-4 h-4 rounded-full bg-white transition-all duration-200"
-        style={{ left: checked ? '22px' : '2px', boxShadow: '0 1px 3px rgba(0,0,0,0.3)' }}
-      />
-    </button>
-  )
-}
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -38,48 +22,15 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-function Row({ label, description, children }: { label: string; description?: string; children: React.ReactNode }) {
-  return (
-    <div className="flex items-center justify-between gap-4">
-      <div>
-        <div className="text-sm text-[#dae2fd]">{label}</div>
-        {description && <div className="text-xs text-[#86948a] mt-0.5">{description}</div>}
-      </div>
-      {children}
-    </div>
-  )
-}
-
 interface SettingsViewProps {
   user: User
 }
 
 export function SettingsView({ user }: SettingsViewProps) {
-  const prefs = (user.preferences ?? {}) as {
-    notifications?: Partial<Record<string, boolean>>
-  }
-  const [notifs, setNotifs] = useState({
-    dailyReminder: prefs.notifications?.dailyReminder ?? true,
-    streak: prefs.notifications?.streak ?? true,
-    challenges: prefs.notifications?.challenges ?? true,
-    community: prefs.notifications?.community ?? false,
-    weeklyReport: prefs.notifications?.weeklyReport ?? true,
-  })
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [isPending, startTransition] = useTransition()
-  const [, startPrefs] = useTransition()
   const router = useRouter()
-
-  function toggleNotif(key: keyof typeof notifs) {
-    setNotifs((n) => {
-      const next = { ...n, [key]: !n[key] }
-      startPrefs(() => {
-        updatePreferences({ notifications: next })
-      })
-      return next
-    })
-  }
 
   function handleSave(formData: FormData) {
     setMessage('')
@@ -155,25 +106,6 @@ export function SettingsView({ user }: SettingsViewProps) {
             </button>
           </Section>
         </form>
-
-        {/* Notifications (persisted to profile.preferences) */}
-        <Section title="Notifications">
-          <Row label="Daily Reminder" description="Remind me to complete today's deeds">
-            <Toggle checked={notifs.dailyReminder} onChange={() => toggleNotif('dailyReminder')} />
-          </Row>
-          <Row label="Streak Alerts" description="Alert me when my streak is at risk">
-            <Toggle checked={notifs.streak} onChange={() => toggleNotif('streak')} />
-          </Row>
-          <Row label="Challenge Updates" description="Notify me about challenge progress">
-            <Toggle checked={notifs.challenges} onChange={() => toggleNotif('challenges')} />
-          </Row>
-          <Row label="Community Activity" description="Show me what others are completing">
-            <Toggle checked={notifs.community} onChange={() => toggleNotif('community')} />
-          </Row>
-          <Row label="Weekly Report" description="Summary of my week every Sunday">
-            <Toggle checked={notifs.weeklyReport} onChange={() => toggleNotif('weeklyReport')} />
-          </Row>
-        </Section>
       </div>
     </div>
   )
