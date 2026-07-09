@@ -45,14 +45,14 @@ export default function LandingPage() {
         </div>
         <div className="flex items-center gap-3">
           <Link
-            href="/dashboard"
+            href="/auth/login"
             className="hidden md:block px-4 py-2 rounded-lg text-sm font-semibold transition-all"
             style={{ color: '#bbcabf', border: '1px solid rgba(255,255,255,0.12)' }}
           >
             Sign In
           </Link>
           <Link
-            href="/dashboard"
+            href="/auth/signup"
             className="px-4 py-2 rounded-lg text-sm font-semibold transition-all hover:shadow-[0_0_20px_rgba(78,222,163,0.4)]"
             style={{ background: '#4edea3', color: '#003824', fontFamily: 'var(--font-sora), sans-serif' }}
           >
@@ -96,7 +96,7 @@ export default function LandingPage() {
 
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <Link
-              href="/dashboard"
+              href="/auth/signup"
               className="flex items-center gap-2 px-6 py-3 rounded-xl text-base font-semibold transition-all hover:shadow-[0_0_30px_rgba(78,222,163,0.4)]"
               style={{ background: '#4edea3', color: '#003824', fontFamily: 'var(--font-sora), sans-serif' }}
             >
@@ -231,7 +231,7 @@ export default function LandingPage() {
           </h2>
           <p className="text-[#bbcabf] mb-8">Free forever. No credit card required. Just your intention.</p>
           <Link
-            href="/dashboard"
+            href="/auth/signup"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-lg font-bold transition-all hover:shadow-[0_0_40px_rgba(78,222,163,0.5)]"
             style={{ background: '#4edea3', color: '#003824', fontFamily: 'var(--font-sora), sans-serif' }}
           >
