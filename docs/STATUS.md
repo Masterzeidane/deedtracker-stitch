@@ -1,6 +1,6 @@
 # DeedTracker — Definitive Status Report (Source of Truth)
 
-**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state. Phase 1 #1–#4 addressed: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only), Notifications section removed from Settings, Navbar notification badge removed. Leaked-password protection reclassified Blocked (Free plan) and moved out of Phase 1 (Pro-only feature; see Known Limitations).
+**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`010`). Reflects the current deployed state. **Phase 1 is complete** except one item blocked by plan tier: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only), Notifications section removed from Settings, Navbar notification badge removed, delete-account shipped (`010`, verified). Leaked-password protection reclassified Blocked (Free plan) and moved out of Phase 1 (Pro-only feature; see Known Limitations).
 
 **Legend:** Complete = works end-to-end on live data · Partial = works but a key sub-behavior is absent · Broken = present but errors · Fake = UI present, no real backing/effect · Missing = not present.
 
@@ -57,7 +57,7 @@
 |---|---|---|---|---|
 | Notification toggles | Removed | UI section deleted (were Fake — persisted to `preferences` but no notification system exists); `updatePreferences()`, the `preferences` column, and `User.preferences` type/mapping left intact per Phase 2 decision | Resolved | — |
 | Privacy toggles | Removed | deleted in commit `7d37662` (were Fake — persisted but never enforced); no longer in the UI | Resolved | — |
-| Delete account | Missing | button removed; no flow | No data-deletion path | Medium |
+| Delete account | Complete | Settings "Danger Zone" → `deleteAccount` action → `delete_account()` SECURITY DEFINER RPC (`auth.uid()`-only, no param) → cascade wipes all user data; verified end-to-end on throwaway accounts (`010`) | Real, irreversible data-deletion path | Medium |
 | Navbar search box | Fake | non-functional input on every screen | Looks broken | High |
 | Navbar notification badge "3" | Removed | hardcoded count deleted (was Fake — no notification system, no unread source); bell icon kept as neutral chrome | Resolved | — |
 
@@ -81,7 +81,7 @@
 5. ✅ **DONE** — **Challenge progress (Partial)** UI removed for launch: progress bar + "Completed" tab gone; challenges are join-only (Available/Joined). Auto-advance deferred to Phase 2; DB/RPCs unchanged.
 6. ✅ **DONE** — **Notification toggles (Fake)** removed from Settings (persisted to `preferences` but no notification system exists). `updatePreferences()`, the `preferences` column, and `User.preferences` type/mapping intentionally left intact (Phase 2 decision).
 7. ✅ **DONE** — **Navbar notification badge "3" (Fake)** removed (hardcoded count, no notification system / unread source). Bell icon kept as neutral chrome.
-8. **Delete-account (Missing)** — provide a data-deletion path (trust/compliance).
+8. ✅ **DONE** — **Delete-account (Missing→Complete)** — Settings "Danger Zone" with explicit confirmation → `deleteAccount` server action → `delete_account()` SECURITY DEFINER RPC (no `user_id` param; deletes only `auth.uid()`; EXECUTE granted to `authenticated` only, `anon` explicitly revoked) → `ON DELETE CASCADE` wipes all user-owned tables. Verified end-to-end on throwaway accounts: caller's data fully erased, a second user untouched, unauthenticated call rejected. Migration `010`.
 
 > **Moved out of Phase 1 — Leaked-password protection (Blocked, Free plan).** Supabase's HaveIBeenPwned check is a Pro-plan feature ($25/mo). The project is on Free and is not upgrading for launch, so this cannot be completed under current constraints and no longer gates launch. The security gap is real but invisible to users; it is tracked under **Known Limitations** below with a clear unblock path (upgrade to Pro, then flip one Auth toggle — no code change).
 
@@ -110,4 +110,4 @@
 
 ---
 
-**Bottom line:** the app is a **secure, live, functional MVP**. The only things standing between today and *launch-ready* are the **Phase 1** items — all of which are removals/hides/config, not new features. Phases 2 and 3 are post-launch. This is the shortest realistic path.
+**Bottom line:** the app is a **secure, live, functional MVP**. **All actionable Phase 1 items are done**; the only remaining Phase 1 item (leaked-password protection) is blocked by the Free plan and moved to Known Limitations, so it does not gate launch. On the product side the app is **launch-ready**. Phases 2 and 3 are post-launch retention/differentiation work.

@@ -154,6 +154,28 @@ export async function updatePreferences(prefs: Record<string, unknown>) {
   return { success: true }
 }
 
+export async function deleteAccount() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
+  // Deletes only the caller's own auth.users row (guarded by auth.uid()
+  // inside the RPC); cascade removes all user-owned data.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).rpc('delete_account')
+  if (error) return { error: error.message }
+
+  // Account (and its session) are gone. Best-effort local cookie purge —
+  // scope 'local' makes no server revoke call, so there is nothing to fail.
+  try {
+    await supabase.auth.signOut({ scope: 'local' })
+  } catch {
+    // session already invalid — expected; cookies are cleared regardless
+  }
+
+  redirect('/')
+}
+
 // ============================================================
 // COMMUNITY ACTIONS
 // ============================================================

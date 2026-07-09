@@ -2,7 +2,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Navbar } from '@/components/layout/Navbar'
-import { updateProfile } from '@/lib/actions'
+import { updateProfile, deleteAccount } from '@/lib/actions'
 import type { User } from '@/types'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -32,6 +32,10 @@ export function SettingsView({ user }: SettingsViewProps) {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
+  const [isDeleting, startDelete] = useTransition()
+
   function handleSave(formData: FormData) {
     setMessage('')
     setError('')
@@ -42,6 +46,15 @@ export function SettingsView({ user }: SettingsViewProps) {
         setMessage('Profile saved.')
         router.refresh()
       }
+    })
+  }
+
+  function handleDelete() {
+    setDeleteError('')
+    startDelete(async () => {
+      // On success the action redirects to '/'; only errors return here.
+      const result = await deleteAccount()
+      if (result?.error) setDeleteError(result.error)
     })
   }
 
@@ -106,6 +119,52 @@ export function SettingsView({ user }: SettingsViewProps) {
             </button>
           </Section>
         </form>
+
+        {/* Danger Zone */}
+        <Section title="Danger Zone">
+          <p className="text-xs text-[#86948a]">
+            Permanently delete your account and all associated data. This cannot be undone.
+          </p>
+
+          {deleteError && <p className="text-xs text-[#ffb3af]">{deleteError}</p>}
+
+          {!confirmingDelete ? (
+            <button
+              type="button"
+              onClick={() => { setDeleteError(''); setConfirmingDelete(true) }}
+              className="px-5 py-2 rounded-lg text-sm font-semibold transition-all"
+              style={{ background: 'rgba(239,68,68,0.12)', color: '#ffb3af', border: '1px solid rgba(239,68,68,0.4)' }}
+            >
+              Delete Account
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-xs text-[#ffb3af] font-semibold">
+                Are you sure? This permanently deletes your account and all data.
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="px-5 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
+                  style={{ background: '#ef4444', color: '#fff', fontFamily: 'var(--font-sora), sans-serif' }}
+                >
+                  {isDeleting ? 'Deleting…' : 'Yes, delete my account'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmingDelete(false)}
+                  disabled={isDeleting}
+                  className="px-5 py-2 rounded-lg text-sm font-semibold transition-all disabled:opacity-50"
+                  style={{ background: 'rgba(255,255,255,0.05)', color: '#bbcabf', border: '1px solid rgba(255,255,255,0.1)' }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+        </Section>
       </div>
     </div>
   )
