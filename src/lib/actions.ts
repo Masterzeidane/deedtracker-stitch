@@ -60,6 +60,9 @@ export async function resetPassword(formData: FormData) {
 
 export async function updatePassword(formData: FormData) {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Not authenticated' }
+
   const password = formData.get('password') as string
 
   const { error } = await supabase.auth.updateUser({ password })
