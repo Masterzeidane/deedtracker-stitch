@@ -1,6 +1,6 @@
 # DeedTracker — Definitive Status Report (Source of Truth)
 
-**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`010`). Reflects the current deployed state. **Phase 1 is complete** except one item blocked by plan tier: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only), Notifications section removed from Settings, Navbar notification badge removed, delete-account shipped (`010`, verified). Leaked-password protection reclassified Blocked (Free plan) and moved out of Phase 1 (Pro-only feature; see Known Limitations).
+**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`010`). Reflects the current deployed state. **Phase 1 is complete** except one item blocked by plan tier: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed, Challenge progress UI removed (join-only), Notifications section removed from Settings, Navbar notification badge removed, delete-account shipped (`010`, verified). Leaked-password protection reclassified Blocked (Free plan) and moved out of Phase 1 (Pro-only feature; see Known Limitations). **LB-1** (fabricated landing stats + fictional testimonials) removed; two LB-1 siblings remain open — pricing advertises non-existent paid features/free-tier limits, and all landing/pricing CTAs point to `/dashboard` instead of `/auth/signup`.
 
 **Legend:** Complete = works end-to-end on live data · Partial = works but a key sub-behavior is absent · Broken = present but errors · Fake = UI present, no real backing/effect · Missing = not present.
 
@@ -50,7 +50,8 @@
 | Accountability (circles/partners) | Missing | not built | No social obligation | Medium |
 | Challenges — join + persist | Complete | `join_challenge` | Can join | Medium |
 | Challenges — progress tracking | Deferred | progress bar + "Completed" tab removed for launch; challenges are join-only (Available/Joined). Auto-advance is a Phase 2 item; DB/RPCs unchanged | Resolved (no longer misleading) | — |
-| Landing / Pricing | Complete | static marketing | Fine | Low |
+| Landing — stats & testimonials (LB-1) | Removed | fabricated hero badge, stats ticker (5,247 / 2.1M+ / 18 days), and 3 fictional testimonials deleted from `src/app/page.tsx`; remaining page (hero, 5 branches, how-it-works, CTA) describes only real features | Resolved (no false scale / social proof) | — |
+| Landing / Pricing — remaining | Fake | pricing advertises non-existent paid features + fictional free-tier limits (no billing exists); all landing/pricing CTAs point to `/dashboard` not `/auth/signup` | Misleading (LB-1 siblings, not yet addressed) | High |
 
 ### Settings & chrome
 | Feature | Status | Why | User impact | Priority |
@@ -110,4 +111,4 @@
 
 ---
 
-**Bottom line:** the app is a **secure, live, functional MVP**. **All actionable Phase 1 items are done**; the only remaining Phase 1 item (leaked-password protection) is blocked by the Free plan and moved to Known Limitations, so it does not gate launch. On the product side the app is **launch-ready**. Phases 2 and 3 are post-launch retention/differentiation work.
+**Bottom line:** the app is a **secure, live, functional MVP**. The original Phase 1 list (#1–#8) is done and #9 is blocked by the Free plan (Known Limitations). A later audit surfaced **LB-1** (landing-page honesty): the fabricated stats + fictional testimonials are now removed, but **two LB-1 siblings still gate launch** — the pricing page advertises paid features and free-tier limits that don't exist (no billing is built), and every landing/pricing CTA routes to `/dashboard` instead of `/auth/signup`. Close those two and the product surface is launch-ready. Phases 2 and 3 are post-launch retention/differentiation work.

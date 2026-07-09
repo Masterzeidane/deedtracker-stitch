@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight, Star, Zap, Trophy, Users, TreePine, Flame, CheckCircle } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 const FADE_UP = {
   hidden: { opacity: 0, y: 24 },
@@ -20,12 +20,6 @@ const STEPS = [
   { n: '01', title: 'Log Your Deeds', desc: 'Record acts of worship, learning, discipline, character, and charity every day.' },
   { n: '02', title: 'Earn XP & Coins', desc: 'Every deed rewards you with experience points and spiritual coins.' },
   { n: '03', title: 'Level Up Your Soul', desc: 'Progress through 9 ranks and bloom all 5 branches of your Spiritual Tree.' },
-]
-
-const TESTIMONIALS = [
-  { name: 'Omar B.', rank: 'Legacy Maker', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=OmarB', quote: 'DeedTracker transformed my relationship with worship. Seeing my streak go from 3 to 87 days changed everything.' },
-  { name: 'Aisha N.', rank: 'Legend', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=AishaN', quote: 'The Spiritual Tree visualization keeps me motivated. I can literally see my soul growing.' },
-  { name: 'Ibrahim K.', rank: 'Elder', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=IbrahimK', quote: 'Challenges with the community give me accountability I never had before. 2,000+ people pushing together.' },
 ]
 
 export default function LandingPage() {
@@ -81,13 +75,6 @@ export default function LandingPage() {
           transition={{ duration: 0.6 }}
           className="relative z-10 max-w-3xl mx-auto"
         >
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6"
-            style={{ background: 'rgba(78,222,163,0.1)', border: '1px solid rgba(78,222,163,0.25)', color: '#4edea3', fontFamily: 'var(--font-jetbrains), monospace' }}
-          >
-            <Flame size={10} /> 10,000+ Deeds Completed Today
-          </div>
-
           <h1
             className="text-5xl md:text-6xl font-extrabold leading-tight mb-6"
             style={{ fontFamily: 'var(--font-sora), sans-serif', letterSpacing: '-0.02em' }}
@@ -125,24 +112,6 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* Stats ticker */}
-          <div className="flex items-center justify-center gap-8 mt-12 flex-wrap">
-            {[
-              { label: 'Active Seekers', value: '5,247', icon: Users },
-              { label: 'Deeds Logged', value: '2.1M+', icon: CheckCircle },
-              { label: 'Avg. Streak', value: '18 days', icon: Flame },
-            ].map(({ label, value, icon: Icon }) => (
-              <div key={label} className="text-center">
-                <div
-                  className="text-2xl font-bold text-[#4edea3] flex items-center gap-2 justify-center"
-                  style={{ fontFamily: 'var(--font-sora), sans-serif' }}
-                >
-                  <Icon size={18} /> {value}
-                </div>
-                <div className="text-xs text-[#86948a] mt-1">{label}</div>
-              </div>
-            ))}
-          </div>
         </motion.div>
       </section>
 
@@ -239,45 +208,6 @@ export default function LandingPage() {
                   {title}
                 </h3>
                 <p className="text-sm text-[#86948a]">{desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <motion.h2
-            variants={FADE_UP}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="text-3xl font-bold text-center text-[#dae2fd] mb-12"
-            style={{ fontFamily: 'var(--font-sora), sans-serif' }}
-          >
-            From the Community
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {TESTIMONIALS.map(({ name, rank, avatar, quote }, i) => (
-              <motion.div
-                key={name}
-                variants={FADE_UP}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="p-5 rounded-xl"
-                style={{ background: 'rgba(23,31,51,0.8)', border: '1px solid rgba(255,255,255,0.06)' }}
-              >
-                <p className="text-sm text-[#bbcabf] italic mb-4 leading-relaxed">&ldquo;{quote}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <img src={avatar} alt={name} className="w-10 h-10 rounded-full" />
-                  <div>
-                    <div className="text-sm font-semibold text-[#dae2fd]" style={{ fontFamily: 'var(--font-sora), sans-serif' }}>{name}</div>
-                    <div className="text-[10px] text-[#4edea3]">{rank}</div>
-                  </div>
-                </div>
               </motion.div>
             ))}
           </div>
