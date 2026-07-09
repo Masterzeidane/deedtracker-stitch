@@ -5,7 +5,6 @@ import {
   LayoutDashboard, TreePine, Scroll, Trophy,
   Users, BarChart3, Medal, User, Settings, LogOut,
 } from 'lucide-react'
-import { EnergyGauge } from '@/components/ui/EnergyGauge'
 import { signOut } from '@/lib/actions'
 
 const NAV_LINKS = [
@@ -20,7 +19,7 @@ const NAV_LINKS = [
 ]
 
 interface SidebarProps {
-  profile?: { name: string; rank: string; energy: number; max_energy: number; avatar_url?: string | null } | null
+  profile?: { name: string; rank: string; avatar_url?: string | null } | null
   branches?: unknown[] | null
 }
 
@@ -29,8 +28,6 @@ export function Sidebar({ profile }: SidebarProps) {
 
   const name = profile?.name ?? 'Seeker'
   const rank = profile?.rank ?? 'Seeker'
-  const energy = profile?.energy ?? 0
-  const maxEnergy = profile?.max_energy ?? 100
   const avatar = profile?.avatar_url ?? `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`
 
   return (
@@ -115,11 +112,6 @@ export function Sidebar({ profile }: SidebarProps) {
               Sign Out
             </button>
           </form>
-
-          {/* Energy gauge */}
-          <div className="px-1 pt-1">
-            <EnergyGauge current={energy} max={maxEnergy} showLabel compact={false} />
-          </div>
         </div>
       </aside>
     </>

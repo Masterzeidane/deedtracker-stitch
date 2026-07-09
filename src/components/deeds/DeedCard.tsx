@@ -1,6 +1,6 @@
 'use client'
 import { motion } from 'framer-motion'
-import { Flame, Star, Coins, Zap, CheckCircle2, Circle } from 'lucide-react'
+import { Flame, Star, Coins, CheckCircle2, Circle } from 'lucide-react'
 import type { Deed } from '@/types'
 import { getBranchColor, getBranchLabel, getDifficultyColor } from '@/lib/utils'
 
@@ -99,7 +99,7 @@ export function DeedCard({ deed, onComplete, disabled }: DeedCardProps) {
           </button>
         </div>
 
-        {/* Footer row: rewards + energy */}
+        {/* Footer row: rewards */}
         <div className="flex items-center gap-3 mt-3">
           <div className="flex items-center gap-1 text-xs" style={{ color: '#4edea3', fontFamily: 'var(--font-jetbrains), monospace' }}>
             <Star size={10} />
@@ -109,12 +109,6 @@ export function DeedCard({ deed, onComplete, disabled }: DeedCardProps) {
             <Coins size={10} />
             +{deed.coinReward}
           </div>
-          {deed.energyCost > 0 && (
-            <div className="flex items-center gap-1 text-xs text-[#60a5fa]" style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
-              <Zap size={10} />
-              -{deed.energyCost}
-            </div>
-          )}
           <div className="ml-auto text-[10px] text-[#86948a]" style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
             ~{deed.estimatedMinutes}min
           </div>

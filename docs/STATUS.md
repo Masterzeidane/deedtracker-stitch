@@ -1,6 +1,6 @@
 # DeedTracker — Definitive Status Report (Source of Truth)
 
-**As of:** production commit `7d37662` on `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state, not earlier ones. (Phase 1 #1 privacy toggles removed in `7d37662`; Phase 1 #2 email delivery verified via Supabase Auth config — no code change.)
+**As of:** `main` · live at https://deedtracker-stitch.vercel.app · Supabase `dhwxxcvolwdzkzggjzup` (migrations `001`–`009`). Reflects the current deployed state. Phase 1 #1–#4 addressed: privacy toggles removed (`7d37662`), email delivery verified via Supabase Auth config (no code change), Navbar search box removed (`7dc2393`), Energy meter UI removed.
 
 **Legend:** Complete = works end-to-end on live data · Partial = works but a key sub-behavior is absent · Broken = present but errors · Fake = UI present, no real backing/effect · Missing = not present.
 
@@ -23,7 +23,7 @@
 | Daily deed list (`getDailyDeeds`) | Complete | live, 29 seeded deeds | Sees today's deeds | Critical |
 | Deed completion (XP/coins/streak/branch/achievement/feed) | Complete | `complete_deed` RPC, live-verified | Core action works | Critical |
 | Quests filter tabs | Complete | client filter | Usable | Low |
-| Energy meter (stat card + gauge) | Fake | mechanic neutralized in `009`; always 100/100, drives nothing | Shows a meaningless meter | High |
+| Energy meter (stat card + gauge) | Removed | UI removed (dashboard card, quests section, sidebar gauge, per-deed cost, EnergyGauge component); DB columns/`restore_energy()` left intact per Phase 2 decision | Resolved | — |
 | Per-deed streak flame | Missing | never tracked in DB (always 0, hidden) | Minor | Low |
 
 ### Progression
@@ -76,8 +76,8 @@
 *Only what makes the product look broken, misleading, or untrustworthy. Clearing these = launch-ready.*
 1. ✅ **DONE** — **Privacy toggles (Fake)** removed in `7d37662`; no longer imply privacy the RLS doesn't enforce.
 2. ✅ **DONE** — **Transactional email delivery** verified via Supabase Auth (Confirm email ON, custom SMTP, Site URL + redirect URLs allow-listed, `NEXT_PUBLIC_SITE_URL` set). No code change required.
-3. **Navbar search box (Fake)** — remove; non-functional control on every screen.
-4. **Energy meter (Fake)** — remove/hide; it displays a dead mechanic.
+3. ✅ **DONE** — **Navbar search box (Fake)** removed in `7dc2393` (non-functional input; no replacement).
+4. ✅ **DONE** — **Energy meter (Fake)** UI removed (dashboard card, quests section, sidebar gauge, per-deed cost, EnergyGauge component). DB columns + `restore_energy()` intentionally left intact (Phase 2 decision).
 5. **Challenge progress (Partial)** — hide the progress bar/Completed tab (or wire it); joining currently implies tracking that never happens.
 6. **Notification toggles (Fake)** — hide until notifications exist; they promise alerts that never arrive.
 7. **Navbar notification badge "3" (Fake)** — remove the hardcoded count.

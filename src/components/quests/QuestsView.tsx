@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Navbar } from '@/components/layout/Navbar'
 import { DeedCard } from '@/components/deeds/DeedCard'
-import { EnergyGauge } from '@/components/ui/EnergyGauge'
 import { completeDeed } from '@/lib/actions'
 import type { Branch, Deed } from '@/types'
 import { getBranchLabel } from '@/lib/utils'
@@ -17,10 +16,9 @@ const BRANCH_COLORS: Record<string, string> = {
 
 interface QuestsViewProps {
   deeds: Deed[]
-  energy: { current: number; max: number }
 }
 
-export function QuestsView({ deeds, energy }: QuestsViewProps) {
+export function QuestsView({ deeds }: QuestsViewProps) {
   const [filter, setFilter] = useState<'all' | Branch>('all')
   const [error, setError] = useState('')
   const [pendingId, setPendingId] = useState<string | null>(null)
@@ -48,22 +46,6 @@ export function QuestsView({ deeds, energy }: QuestsViewProps) {
   return (
     <div className="space-y-6">
       <Navbar title="Daily Quests" />
-
-      {/* Energy bar */}
-      <div
-        className="p-4 rounded-xl"
-        style={{ background: 'rgba(23,31,51,0.8)', border: '1px solid rgba(255,255,255,0.06)' }}
-      >
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-semibold text-[#dae2fd]" style={{ fontFamily: 'var(--font-sora), sans-serif' }}>
-            Daily Energy
-          </h3>
-          <span className="text-xs text-[#86948a]" style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
-            Resets at midnight
-          </span>
-        </div>
-        <EnergyGauge current={energy.current} max={energy.max} />
-      </div>
 
       {error && (
         <div className="px-3 py-2 rounded-lg text-sm text-[#ffb3af]" style={{ background: 'rgba(252,124,120,0.1)', border: '1px solid rgba(252,124,120,0.2)' }}>

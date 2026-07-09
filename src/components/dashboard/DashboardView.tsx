@@ -1,7 +1,7 @@
 'use client'
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { Flame, Star, Coins, Zap } from 'lucide-react'
+import { Flame, Star, Coins } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Navbar } from '@/components/layout/Navbar'
 import { StatCard } from '@/components/ui/StatCard'
@@ -78,10 +78,9 @@ export function DashboardView({ user, deeds, challenges, achievements, activity 
       )}
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard icon={<Star size={20} />} label="Total XP" value={formatXP(user.xp)} color="#4edea3" />
         <StatCard icon={<Coins size={20} />} label="Coins" value={formatCoins(user.coins)} color="#ffb95f" />
-        <StatCard icon={<Zap size={20} />} label="Energy" value={`${user.energy.current}/${user.energy.max}`} color="#60a5fa" />
         <StatCard icon={<Flame size={20} />} label="Streak" value={`${user.streak} days`} color="#ffb95f" />
       </div>
 
